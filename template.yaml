@@ -18,6 +18,7 @@ Resources:
       CodeUri: hello-world/
       Handler: app.lambdaHandler
       Runtime: nodejs14.x
+      Role: !GetAtt MyLambdaExecutionRole.Arn
       Architectures:
         - x86_64
       Events:
@@ -33,6 +34,7 @@ Resources:
       CodeUri: hello-world-2/
       Handler: app.lambdaHandler
       Runtime: nodejs14.x
+      Role: !GetAtt MyLambdaExecutionRole.Arn
       Architectures:
         - x86_64
       Events:
@@ -49,6 +51,28 @@ Resources:
       EndpointConfiguration: 
         Type: REGIONAL
       StageName: dev
+  MyLambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: CloudWatchLogsPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: 'arn:aws:logs:*:*:*'
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -67,4 +91,4 @@ Outputs:
     Value: !GetAtt HelloWorldFunction.Arn
   HelloWorldFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt MyLambdaExecutionRole.Arn
