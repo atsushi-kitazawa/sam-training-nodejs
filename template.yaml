@@ -16,6 +16,7 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: hello-world/
+      AutoPublishAlias: live
       Handler: app.lambdaHandler
       Runtime: nodejs14.x
       Role: !GetAtt MyLambdaExecutionRole.Arn
@@ -26,22 +27,6 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /hello
-            Method: get
-            RestApiId: !Ref API
-  HelloWorldFunction2:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: hello-world-2/
-      Handler: app.lambdaHandler
-      Runtime: nodejs14.x
-      Role: !GetAtt MyLambdaExecutionRole.Arn
-      Architectures:
-        - x86_64
-      Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /hello2
             Method: get
             RestApiId: !Ref API
   API:
@@ -80,12 +65,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    #Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
     Value: !Sub "https://${API}.execute-api.${AWS::Region}.amazonaws.com/dev/hello/"
-  HelloWorldApi2:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    #Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello2/"
-    Value: !Sub "https://${API}.execute-api.${AWS::Region}.amazonaws.com/dev/hello2/"
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
