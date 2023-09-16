@@ -12,10 +12,19 @@ Globals:
     MemorySize: 128
 
 Resources:
+  CalcLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: calc
+      ContentUri: layers/calc
+      CompatibleRuntimes:
+        - nodejs14.x
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: hello-world/
+      Layers:
+        - !Ref CalcLayer
       AutoPublishAlias: live
       Handler: app.lambdaHandler
       Runtime: nodejs14.x

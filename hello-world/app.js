@@ -1,4 +1,7 @@
 // const axios = require('axios')
+
+const layer = require("/opt/calc");
+
 // const url = 'http://checkip.amazonaws.com/';
 let response;
 
@@ -22,6 +25,7 @@ exports.lambdaHandler = async (event, context) => {
             'body': JSON.stringify({
                 message: 'hello serverless friends.',
                 version: 2,
+                layerFunc: layer.add(1, 2),
                 // location: ret.data.trim()
             })
         }
